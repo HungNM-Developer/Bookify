@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
-import '../../../settings/settings_controller.dart';
+import '../../../../live_data.dart';
 
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({Key? key, required this.settingsController})
-      : super(key: key);
-  final SettingsController settingsController;
+  const CustomAppBar({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +32,13 @@ class CustomAppBar extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              settingsController.updateThemeMode(
-                  settingsController.themeMode == ThemeMode.light
+              LiveData.settingsController.updateThemeMode(
+                  LiveData.settingsController.themeMode == ThemeMode.light
                       ? ThemeMode.dark
                       : ThemeMode.light);
             },
             icon: Icon(
-              settingsController.themeMode == ThemeMode.light
+              LiveData.settingsController.themeMode == ThemeMode.light
                   ? Icons.dark_mode_rounded
                   : Icons.light_mode_rounded,
             ),

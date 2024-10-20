@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'page/home/home.dart';
+import '../config/router_name.dart';
 import 'settings/settings_controller.dart';
-import 'settings/settings_view.dart';
 import 'theme/theme.dart';
 
 /// The Widget that configures your application.
@@ -65,20 +64,35 @@ class MyApp extends StatelessWidget {
 
           // Define a function to handle named routes in order to support
           // Flutter web url navigation and deep linking.
-          onGenerateRoute: (RouteSettings routeSettings) {
-            return MaterialPageRoute<void>(
-              settings: routeSettings,
-              builder: (BuildContext context) {
-                switch (routeSettings.name) {
-                  case SettingsView.routeName:
-                    return SettingsView(controller: settingsController);
-
-                  default:
-                    return HomePage(settingsController: settingsController);
-                }
-              },
-            );
-          },
+          initialRoute: 'DashboardScreen',
+          onGenerateRoute: RouterName.generateRoute,
+          //  (RouteSettings routeSettings) {
+          //   return MaterialPageRoute<void>(
+          //     settings: routeSettings,
+          //     builder: (BuildContext context) {
+          //       switch (routeSettings.name) {
+          //         case SettingsView.routeName:
+          //           return SettingsView(
+          //             controller: settingsController,
+          //           );
+          //         default:
+          //           return MultiBlocProvider(
+          //             providers: [
+          //               BlocProvider(
+          //                 create: (_) => AuthCubit(),
+          //               ),
+          //               BlocProvider(
+          //                 create: (_) => AccountCubit(),
+          //               ),
+          //             ],
+          //             child: DashboardPage(
+          //               settingsController: settingsController,
+          //             ),
+          //           );
+          //       }
+          //     },
+          //   );
+          // },
         );
       },
     );
