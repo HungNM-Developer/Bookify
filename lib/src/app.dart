@@ -2,18 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../config/router_name.dart';
+import '../live_data.dart';
 import 'settings/settings_controller.dart';
 import 'theme/theme.dart';
 
 /// The Widget that configures your application.
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({
     Key? key,
     required this.settingsController,
   }) : super(key: key);
 
   final SettingsController settingsController;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void didChangeDependencies() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    LiveData.accessToken = _prefs.getString('ACCESS_TOKEN') ?? '';
+    LiveData.userName = _prefs.getString('USERNAME') ?? '';
+    LiveData.role = _prefs.getString('ROLE') ?? '';
+    LiveData.email = _prefs.getString('EMAIL') ?? '';
+    debugPrint(LiveData.accessToken);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +42,7 @@ class MyApp extends StatelessWidget {
     // The AnimatedBuilder Widget listens to the SettingsController for changes.
     // Whenever the user updates their settings, the MaterialApp is rebuilt.
     return AnimatedBuilder(
-      animation: settingsController,
+      animation: widget.settingsController,
       builder: (BuildContext context, Widget? child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -60,7 +78,7 @@ class MyApp extends StatelessWidget {
           // SettingsController to display the correct theme.
           theme: Themes.lightTheme,
           darkTheme: Themes.darkTheme,
-          themeMode: settingsController.themeMode,
+          themeMode: widget.settingsController.themeMode,
 
           // Define a function to handle named routes in order to support
           // Flutter web url navigation and deep linking.

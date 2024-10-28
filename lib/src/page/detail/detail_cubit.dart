@@ -1,39 +1,35 @@
+import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bookify/src/page/register/register_state.dart';
 
 import '../../../core/cubit_status.dart';
 import '../../../live_data.dart';
 
-class RegisterCubit extends Cubit<RegisterState> {
-  RegisterCubit() : super(const RegisterState());
+part 'detail_state.dart';
 
-  Future<void> signUp(
-    String userName,
-    String email,
-    String password,
-    String passwordConfirm,
+class DetailCubit extends Cubit<DetailState> {
+  DetailCubit() : super(DetailState());
+
+  Future<void> borrowBook(
+    String titleBook,
+    String borrowDate,
+    String returnDate,
   ) async {
     emit(state.copyWith(
       status: CubitStatus.loading,
     ));
     try {
-      if (password.trim() != passwordConfirm.trim()) {
-        emit(state.copyWith(
-          status: CubitStatus.error,
-          message: 'Password And Confirm Password No Match',
-          data: null,
-        ));
-      }
       final response = await LiveData.dio.post(
-        'https://apilibrary-xi.vercel.app/api/users/register',
+        'https://apilibrary-xi.vercel.app/api/borrow-requests',
         data: {
-          'username': userName,
-          'email': email.trim(),
-          'password': passwordConfirm.trim(),
+          'username': LiveData.userName,
+          'title': titleBook,
+          'borrowDate': borrowDate,
+          'returnDate': returnDate,
         },
         options: Options(
-          headers: {},
+          headers: {
+            'Authorization': 'Bearer ${LiveData.accessToken}',
+          },
           followRedirects: false,
           receiveDataWhenStatusError: true,
           receiveTimeout: const Duration(seconds: 8),
@@ -41,17 +37,18 @@ class RegisterCubit extends Cubit<RegisterState> {
           validateStatus: (status) => (status ?? 501) <= 500,
         ),
       );
-      if (response.statusCode == 200) {
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
         emit(state.copyWith(
           status: CubitStatus.success,
+          statusCode: 200,
           message: response.data['message'] ?? '',
-          data: response.data,
         ));
       } else {
         emit(state.copyWith(
           status: CubitStatus.error,
-          message: response.data['message'] ?? '',
-          data: response.data,
+          statusCode: response.statusCode,
+          message: response.statusMessage ?? response.data['message'] ?? '',
         ));
       }
     } catch (e) {

@@ -1,19 +1,29 @@
+import 'package:bookify/core/cubit_status.dart';
+
 class LoginState {
-	final bool isLoading;
-	final String? error;
-	  
-	const LoginState({
-		this.isLoading = false,
-		this.error,
-	});
-	  
-	LoginState copyWith({
-		bool? isLoading,
-		String? error,
-	}) {
-		return LoginState(
-			isLoading: isLoading ?? this.isLoading,
-			error: error ?? this.error,
-		);
-	}
+  final CubitStatus status;
+  final String message;
+  final bool hasAuth;
+  final dynamic data;
+
+  const LoginState({
+    this.status = CubitStatus.initial,
+    this.message = '',
+    this.hasAuth = false,
+    this.data,
+  });
+
+  LoginState copyWith({
+    CubitStatus? status,
+    String? message,
+    bool? hasAuth,
+    dynamic data,
+  }) {
+    return LoginState(
+      status: status ?? this.status,
+      message: message ?? this.message,
+      hasAuth: hasAuth ?? this.hasAuth,
+      data: data ?? this.data,
+    );
+  }
 }

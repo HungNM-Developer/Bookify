@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bookify/src/page/auth/auth_state.dart';
+import 'package:bookify/src/page/account/widget/favorite_books/favorite_books_state.dart';
 
-class AuthCubit extends Cubit<AuthState> {
-  AuthCubit() : super(const AuthState(isLoading: true));
+class FavoriteBooksCubit extends Cubit<FavoriteBooksState> {
+  FavoriteBooksCubit() : super(const FavoriteBooksState(isLoading: true));
 
   Future<void> loadInitialData() async {
     final stableState = state;
@@ -15,6 +15,4 @@ class AuthCubit extends Cubit<AuthState> {
       emit(stableState.copyWith(isLoading: false));
     }
   }
-
-  Future<void> login(String userName, String password) async {}
 }

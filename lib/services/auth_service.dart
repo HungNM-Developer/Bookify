@@ -7,16 +7,16 @@ import 'package:http/http.dart' as http;
 import '../config/constant.dart';
 
 class AuthService extends ChangeNotifier {
-  static const String url = "http://a.vipn.net/api/auth";
+  static const String url = "https://apilibrary-xi.vercel.app/api/";
   // final httpClient = http.Client();
   Map<String, String> customHeaders = {
-    "DEVICE-CODE": "4b74a25b01e5b5a692bd5ada675fc780"
+    // "DEVICE-CODE": "4b74a25b01e5b5a692bd5ada675fc780"
   };
 
   Future<Map<String, String>> login(Map<String, String> body) async {
-    //SharedPreferences _prefs = await SharedPreferences.getInstance();
+    // SharedPreferences _prefs = await SharedPreferences.getInstance();
     var response = await http.post(
-      Uri.parse(AppConstant.domainUrl + 'login'),
+      Uri.parse(AppConstant.domainUrl + 'users/login'),
       headers: customHeaders,
       body: body,
     );

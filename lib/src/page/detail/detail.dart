@@ -1,6 +1,9 @@
+import 'package:bookify/live_data.dart';
+import 'package:bookify/src/page/detail/detail_cubit.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../model/book.dart';
+import '../../widgets/borrow_dialog.dart';
 
 class DetailPage extends StatelessWidget {
   final Book book;
@@ -86,19 +89,20 @@ class DetailPage extends StatelessWidget {
                 height: 10,
               ),
               Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: book.type!
-                      .map(
-                        (e) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: Chip(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.secondary,
-                            label: Text(e),
-                          ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: book.type!
+                    .map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Chip(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondary,
+                          label: Text(e),
                         ),
-                      )
-                      .toList()),
+                      ),
+                    )
+                    .toList(),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 35),
                 child: Text(book.desc!),
@@ -109,12 +113,24 @@ class DetailPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildButton(
-                        Icons.add, Colors.grey[800]!, 'Add To Library'),
+                      Icons.add,
+                      Colors.grey[800]!,
+                      'Add To Library',
+                      () {},
+                    ),
                     const SizedBox(
                       width: 15,
                     ),
-                    _buildButton(
-                        Icons.menu_book, const Color(0xFF6741FF), 'Read Now')
+                    LiveData.accessToken.isNotEmpty && LiveData.role == 'client'
+                        ? _buildButton(
+                            Icons.menu_book,
+                            const Color(0xFF6741FF),
+                            'Borrow Now',
+                            () {
+                              showBorrowDialog(context);
+                            },
+                          )
+                        : const SizedBox.shrink(),
                   ],
                 ),
               )
@@ -125,19 +141,28 @@ class DetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(IconData icon, Color color, String text) {
+  void showBorrowDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BlocProvider(
+          create: (context) => DetailCubit(),
+          child: const BorrowDialog(),
+        );
+      },
+    );
+  }
+
+  Widget _buildButton(
+      IconData icon, Color color, String text, Function()? onPressed) {
     return SizedBox(
       height: 40,
       width: 170,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           elevation: 0,
-          //   primary: color,shape: RoundedRectangleBorder(
-          //   borderRadius: BorderRadius
-          //       .circular(10),
-          // ),
         ),
-        onPressed: () {},
+        onPressed: onPressed,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -193,9 +193,7 @@ class _AuthPageState extends State<AuthPage> {
 
   Widget buildBody(AuthState state) {
     return ListView(
-      children: const [
-        // TODO your code here
-      ],
+      children: const [],
     );
   }
 }

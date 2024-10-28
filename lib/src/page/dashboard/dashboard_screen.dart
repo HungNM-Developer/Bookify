@@ -3,12 +3,10 @@ import 'package:bookify/src/page/account/account_cubit.dart';
 import 'package:bookify/src/page/account/account_screen.dart';
 import 'package:bookify/src/page/home/home_screen.dart';
 import 'package:bookify/src/page/login/login_cubit.dart';
-import 'package:bookify/src/page/login/login_screen.dart';
 import 'package:bookify/src/page/register/register_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../settings/settings_controller.dart';
 import '../add_edit/add_edit_screen.dart';
 
@@ -66,30 +64,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: widgetOptions.elementAt(selectedIndex),
         ),
         bottomNavigationBar: _buildBottomNavigation(),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-            color: Colors.grey[100],
-          ),
-          backgroundColor: const Color(0xFF6741FF),
-          onPressed: () {
-            if (LiveData.accessToken.isEmpty) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const LoginScreen(),
-                ),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const AddEditScreen(),
-                ),
-              );
-            }
-          },
-        ),
+        floatingActionButton:
+            LiveData.accessToken.isNotEmpty && LiveData.role == 'admin'
+                ? FloatingActionButton(
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.grey[100],
+                    ),
+                    backgroundColor: const Color(0xFF6741FF),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const AddEditScreen(),
+                        ),
+                      );
+                    },
+                  )
+                : const SizedBox.shrink(),
       ),
     );
   }
